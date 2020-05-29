@@ -1,0 +1,147 @@
+########## 28.05.2020
+iom@Oanas-MBP~/g/s/g/o/users> aws dynamodb create-table --table-name Users --attribute-definitions AttributeName=ID,AttributeType=S --key-schema AttributeName=ID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "ID",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "Users",
+        "KeySchema": [
+            {
+                "AttributeName": "ID",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "CREATING",
+        "CreationDateTime": "2020-05-28T21:56:31.989000+01:00",
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 5,
+            "WriteCapacityUnits": 5
+        },
+:...skipping...
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "ID",
+                "AttributeType": "S"
+            }
+        ],
+        "TableName": "Users",
+        "KeySchema": [
+            {
+                "AttributeName": "ID",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "CREATING",
+        "CreationDateTime": "2020-05-28T21:56:31.989000+01:00",
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 5,
+            "WriteCapacityUnits": 5
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:eu-west-2:849537040301:table/Users",
+        "TableId": "1edbf980-9ac9-4612-84c0-e025df6bf1da"
+    }
+}
+
+
+
+
+############# 26.05.2020
+
+
+iom@Oanas-MBP~/g/s/g/o/users> aws iam create-role --role-name lambda-users-executor  --assume-role-policy-document file:///Users/iom/go/src/github.com/oanaOM/users/trust-policy.json
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "lambda-users-executor",
+        "RoleId": "AROA4LTC2P6W6LRNETSEQ",
+        "Arn": "arn:aws:iam::849537040301:role/lambda-users-executor",
+        "CreateDate": "2020-05-26T21:53:23+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "lambda.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        }
+    }
+}
+####################
+
+
+
+
+
+
+iom@Oanas-MBP~/g/s/g/o/users> aws lambda create-function --function-name users --runtime go1.x --role arn:aws:iam::849537040301:role/lambda-users-executor --handler main --zip-file fileb:///Users/iom/go/src/github.com/oanaOM/users/main.zip
+{
+    "FunctionName": "users",
+    "FunctionArn": "arn:aws:lambda:eu-west-2:849537040301:function:users",
+    "Runtime": "go1.x",
+    "Role": "arn:aws:iam::849537040301:role/lambda-users-executor",
+    "Handler": "main",
+    "CodeSize": 5026898,
+    "Description": "",
+    "Timeout": 3,
+    "MemorySize": 128,
+    "LastModified": "2020-05-26T21:58:52.225+0000",
+    "CodeSha256": "xaOfQPT4lKwD5EfZFT7FgMe0NomShnu8pB9RFDUhce4=",
+    "Version": "$LATEST",
+    "TracingConfig": {
+        "Mode": "PassThrough"
+    },
+    "RevisionId": "cbc592fa-db76-4566-827b-dac923ee1324",
+    "State": "Active",
+    "LastUpdateStatus": "Successful"
+}
+
+
+##########################################
+iom@Oanas-MBP~/g/s/g/o/users> aws lambda invoke --function-name users output.json
+{
+    "StatusCode": 200,
+    "ExecutedVersion": "$LATEST"
+}
+iom@Oanas-MBP~/g/s/g/o/users> aws dynamodb create-table --table-name Users --attribute-definitions AttributeName=ID,AttributeType=N --key-schema AttributeName=ID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+{
+    "TableDescription": {
+        "AttributeDefinitions": [
+            {
+                "AttributeName": "ID",
+                "AttributeType": "N"
+            }
+        ],
+        "TableName": "Users",
+        "KeySchema": [
+            {
+                "AttributeName": "ID",
+                "KeyType": "HASH"
+            }
+        ],
+        "TableStatus": "CREATING",
+        "CreationDateTime": "2020-05-26T23:11:46.769000+01:00",
+        "ProvisionedThroughput": {
+            "NumberOfDecreasesToday": 0,
+            "ReadCapacityUnits": 5,
+            "WriteCapacityUnits": 5
+        },
+        "TableSizeBytes": 0,
+        "ItemCount": 0,
+        "TableArn": "arn:aws:dynamodb:eu-west-2:849537040301:table/Users",
+        "TableId": "4eb1b3b0-6416-45ec-afef-061d1d7879c2"
+    }
+}

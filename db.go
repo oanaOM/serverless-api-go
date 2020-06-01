@@ -9,7 +9,7 @@ import (
 
 // Declare a new DynamoDB instance. Note that this is safe for concurrent
 // use.
-var db = dynamodb.New(session.New(), aws.NewConfig().WithRegion("us-west-2"))
+var db = dynamodb.New(session.New(), aws.NewConfig().WithRegion("eu-west-2"))
 
 func getItem(id string) (*user, error) {
 	// Prepare the input for the query.
@@ -44,4 +44,26 @@ func getItem(id string) (*user, error) {
 	}
 
 	return u, nil
+}
+
+func putItem(u *user) error {
+
+	input := &dynamodb.PutItemInput{
+		TableName: aws.String("Users"),
+		Item: map[string]*dynamodb.AttributeValue{
+			"ID": {
+				S: aws.String(u.ID),
+			},
+			"Name": {
+				S: aws.String(u.Name),
+			},
+			"Hobbies": {
+				S: aws.String(u.Hobbies),
+			},
+		},
+	}
+
+	_, err := db.PutItem(input)
+	return err
+
 }

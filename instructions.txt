@@ -1,3 +1,78 @@
+########## 01.06.2020
+
+bash-3.2$ aws lambda add-permission --function-name users --statement-id 461c4f4d-6df3-4795-954b-90502c62be2e --action lambda:InvokeFunction --principal apigateway.amazonaws.com --source-arn arn:aws:execute-api:eu-west-2:849537040301:o4y8qlpi12/*/*/*
+{
+    "Statement": "{\"Sid\":\"461c4f4d-6df3-4795-954b-90502c62be2e\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"apigateway.amazonaws.com\"},\"Action\":\"lambda:InvokeFunction\",\"Resource\":\"arn:aws:lambda:eu-west-2:849537040301:function:users\",\"Condition\":{\"ArnLike\":{\"AWS:SourceArn\":\"arn:aws:execute-api:eu-west-2:849537040301:o4y8qlpi12/*/*/*\"}}}"
+}
+
+iom@Oanas-MBP~/g/s/g/o/users> aws apigateway create-deployment --rest-api-id o4y8qlpi12 --stage-name staging 
+{
+    "id": "tk1vnq",
+    "createdDate": "2020-06-01T21:38:39+01:00"
+}
+
+
+
+########## 31.05.2020
+iom@Oanas-MBP~/g/s/g/o/users> aws apigateway create-rest-api --name users
+{
+    "id": "o4y8qlpi12",
+    "name": "users",
+    "createdDate": "2020-05-31T23:51:02+01:00",
+    "apiKeySource": "HEADER",
+    "endpointConfiguration": {
+        "types": [
+            "EDGE"
+        ]
+    }
+}
+
+iom@Oanas-MBP~/g/s/g/o/users> aws apigateway get-resources --rest-api-id o4y8qlpi12
+{
+    "items": [
+        {
+            "id": "tc7dxslcza",
+            "path": "/"
+        }
+    ]
+}
+
+iom@Oanas-MBP~/g/s/g/o/users> aws apigateway create-resource --rest-api-id o4y8qlpi12 --parent-id tc7dxslcza --path-part users
+{
+    "id": "8ndr4b",
+    "parentId": "tc7dxslcza",
+    "pathPart": "users",
+    "path": "/users"
+}
+
+iom@Oanas-MBP~/g/s/g/o/users> aws apigateway put-method --rest-api-id o4y8qlpi12 --resource-id 8ndr4b --http-method ANY --authorization-type NONE
+{
+    "httpMethod": "ANY",
+    "authorizationType": "NONE",
+    "apiKeyRequired": false
+}
+
+arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:849537040301:function:users/invocations
+
+
+
+iom@Oanas-MBP~/g/s/g/o/users> aws apigateway put-integration --rest-api-id o4y8qlpi12 --resource-id 8ndr4b --http-method ANY --type AWS_PROXY --integration-http-method POST --uri arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:849537040301:function:users/invocations
+{
+    "type": "AWS_PROXY",
+    "httpMethod": "POST",
+    "uri": "arn:aws:apigateway:eu-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-2:849537040301:function:users/invocations",
+    "passthroughBehavior": "WHEN_NO_MATCH",
+    "timeoutInMillis": 29000,
+    "cacheNamespace": "8ndr4b",
+    "cacheKeyParameters": []
+}
+
+
+
+
+
+
+
 ########## 28.05.2020
 iom@Oanas-MBP~/g/s/g/o/users> aws dynamodb create-table --table-name Users --attribute-definitions AttributeName=ID,AttributeType=S --key-schema AttributeName=ID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
 {
